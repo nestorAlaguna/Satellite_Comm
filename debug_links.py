@@ -4,7 +4,7 @@ import numpy as np
 
 def debug_link_calculation():
     """Debug why links are always degraded"""
-    print("🔍 DEBUGGING LINK CALCULATIONS")
+    print(" DEBUGGING LINK CALCULATIONS")
     print("="*60)
     
     # Create test components
@@ -41,13 +41,13 @@ def debug_link_calculation():
         
         # Check requirements
         requirement_met = ber < 1e-6
-        print(f"📊 Results:")
+        print(f" Results:")
         print(f"   Received Power: {received_power:.2e} W")
         print(f"   BER: {ber:.2e}")
-        print(f"   Requirement (BER < 1e-6): {'✅ MET' if requirement_met else '❌ FAILED'}")
+        print(f"   Requirement (BER < 1e-6): {' MET' if requirement_met else ' FAILED'}")
         
         # Debug individual components
-        print(f"🔧 Component Analysis:")
+        print(f" Component Analysis:")
         print(f"   Transmit Power: {test_satellite.transmit_power_watts} W")
         print(f"   Satellite Gain: {test_satellite.antenna_gain}")
         print(f"   Wavelength: {test_satellite.wavelength:.2e} m")
@@ -57,7 +57,7 @@ def debug_link_calculation():
 def analyze_ber_sensitivity():
     """Analyze how different parameters affect BER"""
     print("\n" + "="*60)
-    print("📈 BER SENSITIVITY ANALYSIS")
+    print(" BER SENSITIVITY ANALYSIS")
     print("="*60)
     
     base_satellite = Satellite(
@@ -99,7 +99,7 @@ def analyze_ber_sensitivity():
                 )
                 
                 received_power, ber = link.calculate_link_budget()
-                status = "✅ OPERATIONAL" if ber < 1e-6 else "❌ DEGRADED"
+                status = " OPERATIONAL" if ber < 1e-6 else " DEGRADED"
                 
                 print(f"{power:6.1f} | {gain:4} | {aperture:8.1f} | {ber:.2e} | {status}")
 

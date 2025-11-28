@@ -13,7 +13,7 @@ class OrbitSimulator:
         self.data_manager = SatelliteDataManager()  # Data manager
         
     def load_real_satellites(self) -> List[Satellite]:
-        """Load real satellites using our data manager"""
+        """Load real satellites using data manager"""
         print("Loading real satellite data...")
         tle_data = self.data_manager.get_tle_data()
         
@@ -22,7 +22,7 @@ class OrbitSimulator:
             # Create Skyfield satellite object
             skyfield_sat = EarthSatellite(line1, line2, name, self.ts)
             
-            # Create our MBSE Satellite object with real data
+            # Create MBSE Satellite object with real data
             sat = Satellite(
                 id=name,
                 position=np.array([0, 0, 0]),  # Will be updated in real-time
@@ -40,7 +40,7 @@ class OrbitSimulator:
         """Calculate REAL elevation and distance using Skyfield"""
         
         if hasattr(satellite, 'skyfield_object'):
-            # Convert our ground station location to Skyfield format
+            # Convert ground station location to Skyfield format
             gs_lat, gs_lon, gs_alt = ground_station.location
             ground_station_point = wgs84.latlon(gs_lat, gs_lon, gs_alt)
             
@@ -97,7 +97,7 @@ class DigitalTwinEngine:
                     ground_station, satellite, current_time
                 )
                 
-                # Check if we can track this satellite
+                # Check if it is possible to track this satellite
                 if ground_station.can_track(elevation):
                     print(f"✓ {ground_station.id} can track {satellite.id} (Elevation: {elevation:.1f}°)")
                     
@@ -135,14 +135,14 @@ class DigitalTwinEngine:
         else:
             print(f"     Link {link.satellite.id} -> {link.ground_station.id} is DEGRADED")
 
-# Let's test our new simulation engine
+# Test 
 if __name__ == "__main__":
     print("=== INITIALIZING SATELLITE COMMUNICATIONS DIGITAL TWIN ===")
     
     # 1. Create the digital twin engine
     digital_twin = DigitalTwinEngine()
     
-    # 2. Add our ground station (Eindhoven)
+    # 2. Add ground station (Eindhoven)
     groundS_gs = GroundStation(
         id="EINDHOVEN",
         location=[51.4416, 5.4697, 0.0],
@@ -163,8 +163,7 @@ if __name__ == "__main__":
     # 4. Run a simple simulation for 3 time steps
     print("\n=== STARTING SIMULATION ===")
     for time_step in range(3):
-        # In a real simulation, we would use actual timestamps
-        # For now, we'll use simple time steps
+    
         digital_twin.run_time_step(time_step, f"2024-06-{10 + time_step} 12:00:00")
     
     print("\n=== SIMULATION COMPLETE ===")

@@ -16,19 +16,18 @@ class Satellite(BaseModel):
     
     # These are the block's ATTRIBUTES. They define its state and properties.
     
-    # 'id' is a string. It's required. This is the satellite's name.
+    # 'id' is a string. This is the satellite's name.
     id: str
     
-    # 'position' is a NumPy array of 3 numbers (x, y, z in space). It's required.
-    # Because we set arbitrary_types_allowed=True, Pydantic won't complain about np.ndarray.
+    # 'position' is a NumPy array of 3 numbers (x, y, z in space).
     position: np.ndarray
     
     # 'transmit_power_watts' is a float. It MUST be greater than 0 (gt=0).
-    # 'Field' lets us add this extra validation. Default is 10.0 Watts.
+    # 'Field' allows to add extra validation. Default is 10.0 Watts.
     transmit_power_watts: float = Field(default=10.0, gt=0)
     
     # 'wavelength' is the light's color. 1550 nanometers is common for optics.
-    # The default is 1550e-9 meters. It also must be > 0.
+    # The default is 1550e-9 meters. It must be > 0.
     wavelength: float = Field(default=1550e-9, gt=0)
     
     # 'antenna_gain' represents how well the satellite's telescope focuses light.
@@ -55,12 +54,12 @@ class GroundStation(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
     id: str
-    # Let's use a simple list for lat, lon, alt. It's easier for now than a np.array.
+    # List for lat, lon, alt. 
     # This represents the ground station's fixed location on Earth.
     # Latitude, Longitude, Altitude (in meters)
-    location: list[float] = Field(..., min_items=3, max_items=3)  # '...' means this field is required and has no default.
+    location: list[float] = Field(..., min_items=3, max_items=3) 
 
-    # NEW CONCEPT: This is from your optical background.
+    
     # The aperture diameter (in meters) of the receiving telescope.
     # A larger aperture collects more light, improving the link.
     aperture_diameter: float = Field(default=0.5, gt=0)  # Default 50 cm telescope
@@ -134,11 +133,11 @@ class OpticalLink(BaseModel):
 
         # 6. Calculate Bit Error Rate 
         # For optical OOK systems with avalanche photodiodes
-        # Assuming a more sensitive receiver
+        
         
         # Receiver sensitivity (photons per bit)
         # Real optical systems can detect much lower power levels
-        required_photons_per_bit = 100  # UPDATED: More sensitive receiver
+        required_photons_per_bit = 100  
         
         # Calculate received photons per second
         energy_per_photon = 6.626e-34 * 3e8 / self.satellite.wavelength  # E = hc/λ
@@ -163,19 +162,18 @@ class OpticalLink(BaseModel):
 
 
 # ------------------------------- Tests -------------------------------
-# 3. LET'S TEST IT: This code only runs if we execute this file directly.
+
 if __name__ == "__main__":
     print("=== Testing the Fixed Satellite Model ===")
-    # Let's create an INSTANCE of our Satellite block.
-    # This is like taking the blueprint (the class) and building a real satellite object.
+
     my_satellite = Satellite(
         id="ASTRA-1",
-        position=np.array([1000000, 2000000, 3000000.0]) # A random position in meters. Using floats is good practice.
-        # We are using the defaults for power, wavelength, and gain.
+        position=np.array([1000000, 2000000, 3000000.0]) 
+        # Defaults for power, wavelength, and gain.
     )
     
 
-    # Now, let's print our satellite to see what we made.
+
     print("\n1. My Satellite Object:")
     print(my_satellite)
     
@@ -183,14 +181,14 @@ if __name__ == "__main__":
     print(f"  Satellite ID: {my_satellite.id}")
     print(f"  Transmit Power: {my_satellite.transmit_power_watts} W")
     print(f"  Position Array: {my_satellite.position}")
-    print(f"  Type of 'position': {type(my_satellite.position)}") # Let's confirm it's a NumPy array
+    print(f"  Type of 'position': {type(my_satellite.position)}") 
 
     print("\n3. Testing Validation (this should FAIL):")
     try:
         bad_satellite = Satellite(
             id="BAD-ASTRA",
             position=np.array([0, 0, 0]),
-            transmit_power_watts=-5.0  # This violates our 'gt=0' rule!
+            transmit_power_watts=-5.0  # This violates'gt=0' rule!
         )
     except Exception as e:
         print(f"   Good! Validation caught an error: {e}")
@@ -215,7 +213,7 @@ if __name__ == "__main__":
     print("TESTING THE GROUND STATION BLOCK")
     print("="*50)
 
-    # Let's create a ground station. We'll use a location in The Netherlands.
+    # Ground station
     eindhoven_gs = GroundStation(
         id="EINDHOVEN",
         location=[51.4416, 5.4697, 0.0],  # Latitude, Longitude, Altitude
@@ -239,16 +237,15 @@ if __name__ == "__main__":
     print(f"   Can track satellite at {high_elevation}°? {can_track_high}")
 
     print("\n3. Testing Requirement Verification:")
-    # Now let's use our Requirement class.
+    
     # This is REQ-001 from our initial plan: "The ground station shall only track satellites above min_elevation."
     req_001 = Requirement(
         id="REQ-001",
         text=f"The ground station shall only track satellites above {eindhoven_gs.min_elevation}° elevation."
     )
 
-    # We verify the requirement by checking the behavior we just tested.
-    # The requirement is satisfied if the station correctly REJECTS the low-elevation satellite.
-    # We verify that it CANNOT track the low one.
+    
+
     req_001.verify(condition=not can_track_low)
 
     print(f"   {req_001.id}: {req_001.text}")
@@ -258,7 +255,7 @@ if __name__ == "__main__":
     print("TESTING THE OPTICAL LINK - THE FULL SYSTEM")
     print("="*50)
 
-    # 1. Create our system blocks
+    # 1. Create system blocks
     my_satellite = Satellite(
         id="ASTRA-1",
         position=np.array([1000000, 2000000, 3000000.0]),
@@ -273,12 +270,12 @@ if __name__ == "__main__":
         min_elevation=5.0
     )
 
-    # 2. Check if we can even establish a link (using the ground station's behavior)
-    # Let's assume for this test that the satellite is visible (elevation > 5°)
+    # 2. Check if a link can be established 
+    # Assume  that the satellite is visible (elevation > 5°)
     print("1. System Pre-Check:")
     print(f"   Ground Station can track: {my_ground_station.can_track(satellite_elevation=25.0)}")
 
-    # 3. CREATE THE LINK between the blocks
+    # 3. Create the link between the blocks
     print("\n2. Creating Optical Link...")
     my_link = OpticalLink(
         satellite=my_satellite,
@@ -287,28 +284,28 @@ if __name__ == "__main__":
         distance=500_000  # 500 km
     )
 
-    # 4. RUN THE PARAMETRIC ANALYSIS (The core physics)
+    # 4. Run parametric analysis 
     print("\n3. Running Link Budget Calculation...")
     received_power, ber = my_link.calculate_link_budget()
 
-    # 5. VERIFY SYSTEM REQUIREMENTS
+    # 5. Verify systems requirements
     print("\n4. Verifying System Requirements:")
     req_002 = Requirement(
         id="REQ-002",
         text="The link shall maintain a Bit Error Rate (BER) better than 1e-6."
     )
-    # Verify the requirement using our calculated BER
+    # Verify the requirement using the calculated BER
     req_002.verify(ber < 1e-6)
     print(f"   {req_002.id}: {req_002.text}")
     print(f"   Requirement MET: {req_002.verified} (Actual BER: {ber:.2e})")
 
-    # Let's see what happens in BAD weather
+    # Test undeer bad weather conditions
     print("\n" + "-"*30)
     print("SIMULATING CLOUDY CONDITIONS...")
     bad_link = OpticalLink(
         satellite=my_satellite,
         ground_station=my_ground_station,
-        atmospheric_condition=AtmosphericCondition.CLOUDY,  # CLOUDY now!
+        atmospheric_condition=AtmosphericCondition.CLOUDY,  # Cloudy
         distance=500_000
     )
     received_power_bad, ber_bad = bad_link.calculate_link_budget()

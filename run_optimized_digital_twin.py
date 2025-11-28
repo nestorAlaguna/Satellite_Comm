@@ -86,11 +86,11 @@ class OptimizedDigitalTwin(DigitalTwinEngine):
         print("   Realistic Optical Satellite Communications")
         print("=" + "="*70)
         
-        # Add our optimized components
+        # Add optimized components
         self.add_enhanced_ground_stations()
         self.create_optimized_satellites()
         
-        # Load some real satellites too for comparison
+        # Load some real data from satellites for comparison
         real_sats = self.orbit_simulator.load_real_satellites()
         for sat in real_sats[:2]:  # Just 2 real ones for demo
             self.add_satellite(sat)

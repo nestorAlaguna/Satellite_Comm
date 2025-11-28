@@ -45,7 +45,7 @@ def final_verification():
             viz = SatelliteVisualizer()
             viz.plot_satellite_constellation(twin.satellites, twin.ground_stations)
             
-            if len(results) >= 4:  # Only create dashboard if we have enough data
+            if len(results) >= 4:  # Only create dashboard if there is enough data
                 viz.create_performance_dashboard(results)
                 print(f" Performance dashboard created with operational data!")
             

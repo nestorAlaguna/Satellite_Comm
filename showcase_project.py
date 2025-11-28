@@ -32,7 +32,7 @@ def showcase_complete_project():
     # Constellation visualization
     viz.plot_satellite_constellation(optimized_twin.satellites, optimized_twin.ground_stations)
     
-    # Performance dashboard (if we have results)
+    # Performance dashboard (if there is results)
     if results:
         viz.create_performance_dashboard(results)
     
@@ -55,13 +55,7 @@ def showcase_complete_project():
     print(f"   • performance_dashboard.png - Performance analysis")
     print(f"   • fade_prediction_examples.png - ML prediction examples")
     
-    print(f"   This project demonstrates:")
-    print(f"   • Model-Based Systems Engineering (MBSE) with Python")
-    print(f"   • Optical satellite communication physics")
-    print(f"   • Real orbital mechanics integration") 
-    print(f"   • Machine Learning for predictive maintenance")
-    print(f"   • Professional data visualization")
-    print(f"   • System performance optimization")
+
 
 if __name__ == "__main__":
     showcase_complete_project()

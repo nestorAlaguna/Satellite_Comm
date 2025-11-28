@@ -1,4 +1,4 @@
-# ml_predictor.py (SIMPLIFIED - CPU ONLY VERSION)
+# ml_predictor.py (CPU ONLY VERSION)
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.ensemble import RandomForestRegressor

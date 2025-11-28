@@ -24,7 +24,7 @@ class OrbitSimulator:
             # Create Skyfield satellite object
             skyfield_sat = EarthSatellite(line1, line2, name, self.ts)
             
-            # Create our MBSE Satellite object with real data
+            # Create MBSE Satellite object with real data
             sat = Satellite(
                 id=name[:20],  # Trim long names for display
                 position=np.array([0, 0, 0]),  # Will be updated in real-time
@@ -46,7 +46,7 @@ class OrbitSimulator:
         """
         if hasattr(satellite, 'skyfield_object'):
             try:
-                # Convert our ground station location to Skyfield format
+                # Convert ground station location to Skyfield format
                 gs_lat, gs_lon, gs_alt = ground_station.location
                 ground_station_point = wgs84.latlon(gs_lat, gs_lon, gs_alt)
                 
@@ -74,7 +74,7 @@ class OrbitSimulator:
 
 class DigitalTwinEngine:
     """
-    The main engine that runs our digital twin simulation with REAL orbital data.
+    The main engine that runs digital twin simulation with REAL orbital data.
     """
     def __init__(self):
         self.orbit_simulator = OrbitSimulator()
@@ -152,7 +152,7 @@ class DigitalTwinEngine:
                 # Update satellite position with real data
                 satellite.position = position
                 
-                # Check if we can track this satellite
+                # Check if it is possible to track this satellite
                 if ground_station.can_track(elevation):
                     visible_count += 1
                     print(f"\n    TRACKING {satellite.id}")
@@ -233,7 +233,7 @@ def main():
     digital_twin.add_ground_station(esa_gs)
     print(f"    {esa_gs.id}")
     
-    # 3. Load REAL satellites
+    # 3. Load real data from satellites
     print("\n  LOADING SATELLITE CONSTELLATION")
     digital_twin.load_real_satellites()
     

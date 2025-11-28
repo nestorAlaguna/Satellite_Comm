@@ -103,7 +103,7 @@ class SatelliteVisualizer:
         ax.set_zlabel('Z (km)', fontweight='bold')
         ax.set_title('3D Satellite Constellation', fontweight='bold', fontsize=12, pad=20)
         
-        # Add legend only if we have items
+        # Add legend only if there is items
         if sat_plotted or gs_plotted:
             ax.legend(loc='upper right', bbox_to_anchor=(1, 0.9))
         
